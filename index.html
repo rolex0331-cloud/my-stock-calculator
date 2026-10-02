@@ -3,87 +3,354 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>내 주식 얼마 되지? | 손익·본전·목표가 계산기</title>
-<meta name="description" content="평단, 수량, 현재가만 입력하면 현재 손익과 수익률, 본전까지 필요한 상승률, 목표금액에 필요한 주가를 바로 계산하는 무료 주식 계산기입니다." />
+<title>플러스라이프 주식 계산기 | 물타기·손실복구·목표평단·목표수익·복리</title>
+<meta name="description" content="주식 물타기 평단, 손실 복구에 필요한 상승률, 목표 평단가, 목표 수익 주가, 복리 성장까지 한 번에 계산하는 무료 주식 계산기입니다." />
+<meta name="keywords" content="주식 물타기 계산기, 평단 계산기, 손실 복구 계산기, 목표 평단 계산기, 주식 수익률 계산기, 복리 계산기" />
+<meta property="og:title" content="플러스라이프 주식 계산기" />
+<meta property="og:description" content="물타기·손실복구·목표평단·목표수익·복리를 한 곳에서 계산하세요." />
+<meta property="og:type" content="website" />
+<meta name="theme-color" content="#07111f" />
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"WebApplication",
+  "name":"플러스라이프 주식 계산기",
+  "applicationCategory":"FinanceApplication",
+  "operatingSystem":"Any",
+  "description":"주식 물타기 평단, 손실 복구, 목표 평단가, 목표 수익 주가, 복리 성장을 계산하는 무료 도구"
+}
+</script>
 <style>
-:root{--bg:#07111f;--panel:#0e1a2b;--panel2:#122238;--line:#20334e;--text:#f6f9ff;--muted:#9eb0c7;--green:#26d07c;--red:#ff5d6c;--blue:#5aa7ff;--yellow:#ffc857;--shadow:0 18px 60px rgba(0,0,0,.28)}
-*{box-sizing:border-box} body{margin:0;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans KR",sans-serif;background:radial-gradient(circle at 15% 0%,#14315b 0,#081321 35%,#050b13 100%);color:var(--text);min-height:100vh}.wrap{width:min(1100px,calc(100% - 28px));margin:auto;padding:28px 0 56px}.top{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:18px}.brand{font-weight:900;letter-spacing:-.04em;font-size:clamp(24px,5vw,38px)}.brand span{color:var(--blue)}.badge{font-size:12px;color:#bcd3ef;border:1px solid #2c4667;border-radius:999px;padding:7px 10px;background:#0d1b2d}.hero{background:linear-gradient(135deg,rgba(31,78,132,.55),rgba(10,23,39,.92));border:1px solid #284567;border-radius:24px;padding:24px;box-shadow:var(--shadow);margin-bottom:18px}.hero h1{margin:0 0 9px;font-size:clamp(28px,6vw,54px);line-height:1.03;letter-spacing:-.055em}.hero p{margin:0;color:#c3d0df;line-height:1.65;font-size:15px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.card{background:rgba(14,26,43,.94);border:1px solid var(--line);border-radius:22px;padding:20px;box-shadow:var(--shadow)}.card h2{font-size:17px;margin:0 0 16px;letter-spacing:-.03em}.fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{display:flex;flex-direction:column;gap:7px}.field.full{grid-column:1/-1}label{font-size:12px;color:var(--muted)}input{width:100%;background:#091522;border:1px solid #2b405d;color:white;padding:14px 14px;border-radius:14px;font-size:16px;outline:none}input:focus{border-color:#5796e6;box-shadow:0 0 0 3px rgba(90,167,255,.12)}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}button{border:0;border-radius:13px;padding:12px 14px;font-weight:800;cursor:pointer;background:#1e7be6;color:white}button.secondary{background:#172841;color:#dce9f8;border:1px solid #2c4667}button.ghost{background:transparent;color:#9fb5cf;border:1px solid #2b405d}.summary{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.metric{background:#091522;border:1px solid #1c314a;border-radius:16px;padding:14px}.metric .k{font-size:12px;color:var(--muted);margin-bottom:5px}.metric .v{font-size:23px;font-weight:900;letter-spacing:-.04em}.metric .s{font-size:12px;color:#8ca0b8;margin-top:4px}.pos{color:var(--green)}.neg{color:var(--red)}.scenarios{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}.scenario{background:#0a1725;border:1px solid #1e344e;border-radius:16px;padding:14px 10px;text-align:center}.scenario .pct{font-size:12px;color:#89a1bd}.scenario .price{font-weight:900;margin:6px 0}.scenario .profit{font-size:12px;color:#b8c8d9}.section{margin-top:18px}.goalbox{display:grid;grid-template-columns:1fr 1fr;gap:12px}.resultline{margin-top:12px;padding:14px;border-radius:14px;background:#0a1725;border:1px solid #1e344e;color:#d7e5f5;line-height:1.6}.saved-list{display:flex;flex-direction:column;gap:9px}.saved-item{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 13px;background:#091522;border:1px solid #1b314a;border-radius:14px}.saved-item strong{display:block}.saved-item small{color:#8399b3}.saved-item .buttons{display:flex;gap:7px}.saved-item button{padding:8px 10px;font-size:12px}.notice{color:#7f93aa;font-size:12px;line-height:1.6;margin-top:15px}.footer{text-align:center;color:#6f839b;font-size:12px;margin-top:24px;line-height:1.7}.accent{color:var(--yellow)}
-@media(max-width:760px){.grid{grid-template-columns:1fr}.fields{grid-template-columns:1fr}.field.full{grid-column:auto}.summary{grid-template-columns:1fr 1fr}.scenarios{grid-template-columns:repeat(2,1fr)}.scenario:last-child{grid-column:1/-1}.goalbox{grid-template-columns:1fr}.top{align-items:flex-start;flex-direction:column}.hero{padding:20px}.card{padding:17px}}
+:root{
+  --bg:#07111f;--panel:#0e1a2b;--panel2:#122238;--line:#213651;
+  --text:#f5f8fd;--muted:#9eb0c7;--green:#2bd283;--red:#ff6473;
+  --blue:#62a9ff;--yellow:#ffc857;--shadow:0 20px 65px rgba(0,0,0,.28)
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans KR",sans-serif;background:radial-gradient(circle at 15% 0%,#14315b 0,#081321 35%,#050b13 100%);color:var(--text);min-height:100vh}
+button,input{font:inherit}
+button{cursor:pointer}
+.wrap{width:min(1120px,calc(100% - 28px));margin:auto;padding:24px 0 56px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:18px}
+.brand{font-weight:950;letter-spacing:-.05em;font-size:clamp(23px,4.8vw,36px)}
+.brand span{color:var(--blue)}
+.badge{font-size:12px;color:#c5d8ee;border:1px solid #2c4667;border-radius:999px;padding:8px 11px;background:#0d1b2d;white-space:nowrap}
+.hero{background:linear-gradient(135deg,rgba(31,78,132,.62),rgba(10,23,39,.94));border:1px solid #284567;border-radius:26px;padding:27px;box-shadow:var(--shadow)}
+.hero h1{margin:0 0 10px;font-size:clamp(30px,6.2vw,56px);line-height:1.02;letter-spacing:-.06em}
+.hero p{margin:0;color:#c5d2e2;line-height:1.7;font-size:15px;max-width:760px}
+.accent{color:var(--yellow)}
+.quick{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin-top:18px}
+.quick button{border:1px solid #2b4565;background:#0c1b2d;color:#dce9f8;border-radius:15px;padding:12px 8px;font-weight:850;font-size:13px}
+.quick button:hover,.quick button.active{border-color:#5a9ce9;background:#153154;color:#fff;transform:translateY(-1px)}
+.tool{margin-top:18px;background:rgba(14,26,43,.95);border:1px solid var(--line);border-radius:24px;padding:21px;box-shadow:var(--shadow);display:none}
+.tool.active{display:block}
+.toolhead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:18px}
+.tool h2{margin:0;font-size:22px;letter-spacing:-.04em}
+.toolhead p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.55}
+.pill{font-size:11px;border:1px solid #2d4664;padding:6px 9px;border-radius:999px;color:#b9cee5;white-space:nowrap}
+.fields{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.field{display:flex;flex-direction:column;gap:7px}
+.field.full{grid-column:1/-1}
+label{font-size:12px;color:var(--muted)}
+input{width:100%;background:#091522;border:1px solid #2b405d;color:#fff;padding:14px;border-radius:14px;font-size:16px;outline:none}
+input:focus{border-color:#5796e6;box-shadow:0 0 0 3px rgba(90,167,255,.12)}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
+.btn{border:0;border-radius:13px;padding:12px 15px;font-weight:850;background:#1e7be6;color:#fff}
+.btn.secondary{background:#172841;color:#dce9f8;border:1px solid #2c4667}
+.btn.ghost{background:transparent;color:#a9bdd4;border:1px solid #2b405d}
+.result{margin-top:15px;border-radius:18px;background:#091522;border:1px solid #1f3550;padding:16px;min-height:86px}
+.result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.metric{padding:12px;border-radius:14px;background:#0d1c2e;border:1px solid #1c314a}
+.metric .k{font-size:11px;color:#94a9c1;margin-bottom:6px}
+.metric .v{font-size:21px;font-weight:950;letter-spacing:-.04em;word-break:break-all}
+.metric .s{font-size:11px;color:#8097b1;margin-top:5px;line-height:1.45}
+.pos{color:var(--green)} .neg{color:var(--red)} .warn{color:var(--yellow)}
+.note{margin-top:12px;color:#879bb2;font-size:12px;line-height:1.65}
+.mode{display:flex;gap:8px;margin-bottom:12px}
+.mode button{border:1px solid #2b405d;background:#0a1725;color:#aebfd3;border-radius:11px;padding:9px 12px;font-size:12px;font-weight:800}
+.mode button.active{background:#1c3d65;border-color:#5a9ce9;color:#fff}
+.content{margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.info{background:rgba(14,26,43,.86);border:1px solid var(--line);border-radius:21px;padding:20px}
+.info h3{margin:0 0 10px;font-size:17px}
+.info p,.info li{color:#aebed0;font-size:13px;line-height:1.75}
+.info ul{padding-left:18px;margin:8px 0 0}
+.table{width:100%;border-collapse:collapse;font-size:13px;margin-top:10px}
+.table th,.table td{padding:10px 8px;border-bottom:1px solid #1f324b;text-align:right}
+.table th:first-child,.table td:first-child{text-align:left}
+.table th{color:#8fa6bf;font-weight:700}
+.footer{text-align:center;color:#6f839b;font-size:12px;margin-top:25px;line-height:1.75}
+.mini{font-size:11px;color:#7f93aa}
+.copyok{color:var(--green);font-size:12px;margin-left:4px}
+@media(max-width:800px){
+  .top{align-items:flex-start;flex-direction:column}
+  .quick{grid-template-columns:repeat(2,1fr)}
+  .quick button:last-child{grid-column:1/-1}
+  .fields,.content{grid-template-columns:1fr}
+  .field.full{grid-column:auto}
+  .result-grid{grid-template-columns:1fr}
+  .hero,.tool{padding:18px}
+  .toolhead{flex-direction:column}
+}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="top"><div class="brand">내 주식 <span>얼마 되지?</span></div><div class="badge">서버 없음 · 무료 · 브라우저 저장</div></div>
+  <div class="top">
+    <div class="brand">플러스라이프 <span>주식 계산기</span></div>
+    <div class="badge">무료 · 로그인 없음 · 모바일 지원</div>
+  </div>
+
   <section class="hero">
-    <h1>오늘 내 종목,<br><span class="accent">얼마 벌고 있지?</span></h1>
-    <p>평단·수량·현재가만 입력하면 현재 손익부터 본전까지 필요한 상승률, 목표금액에 필요한 주가까지 바로 계산합니다.</p>
+    <h1>주식 계산,<br><span class="accent">한 곳에서 끝내기</span></h1>
+    <p>물타기 후 평단, 손실 복구에 필요한 상승률, 목표 평단에 필요한 추가매수, 목표 수익 주가, 복리 성장까지 바로 계산합니다. 입력값은 서버로 전송하지 않습니다.</p>
+    <div class="quick" id="tabs">
+      <button class="active" data-target="avgdown">물타기 계산</button>
+      <button data-target="recovery">손실 복구</button>
+      <button data-target="targetavg">목표 평단</button>
+      <button data-target="targetprofit">목표 수익</button>
+      <button data-target="compound">복리 계산</button>
+    </div>
   </section>
 
-  <div class="grid">
-    <section class="card">
-      <h2>1. 내 종목 입력</h2>
-      <div class="fields">
-        <div class="field full"><label>종목명 (선택)</label><input id="name" placeholder="예: 삼성전자" /></div>
-        <div class="field"><label>평균 매수가</label><input id="avg" inputmode="decimal" placeholder="예: 72000" /></div>
-        <div class="field"><label>보유 수량</label><input id="qty" inputmode="decimal" placeholder="예: 10" /></div>
-        <div class="field full"><label>현재가</label><input id="current" inputmode="decimal" placeholder="예: 69500" /></div>
-      </div>
-      <div class="actions">
-        <button id="calc">계산하기</button>
-        <button class="secondary" id="save">이 종목 저장</button>
-        <button class="ghost" id="reset">초기화</button>
-      </div>
-      <div class="notice">수수료·세금은 반영하지 않은 단순 계산입니다. 저장 정보는 이 기기의 브라우저에만 보관됩니다.</div>
-    </section>
+  <section class="tool active" id="avgdown">
+    <div class="toolhead">
+      <div><h2>물타기 평단 계산기</h2><p>현재 보유분과 추가매수분을 합친 새 평균단가를 계산합니다.</p></div>
+      <span class="pill">기존 인기 기능</span>
+    </div>
+    <div class="mode">
+      <button class="active" data-mode="qty">추가 수량으로 계산</button>
+      <button data-mode="amount">추가 금액으로 계산</button>
+    </div>
+    <div class="fields">
+      <div class="field"><label>현재 평균 매수가</label><input id="ad_avg" inputmode="decimal" placeholder="예: 10000"></div>
+      <div class="field"><label>현재 보유 수량</label><input id="ad_qty" inputmode="decimal" placeholder="예: 100"></div>
+      <div class="field"><label>추가매수 가격</label><input id="ad_price" inputmode="decimal" placeholder="예: 7000"></div>
+      <div class="field" id="qtyField"><label>추가매수 수량</label><input id="ad_addqty" inputmode="decimal" placeholder="예: 50"></div>
+      <div class="field" id="amountField" style="display:none"><label>추가매수 금액</label><input id="ad_amount" inputmode="decimal" placeholder="예: 500000"></div>
+    </div>
+    <div class="actions"><button class="btn" onclick="calcAvgDown()">계산하기</button><button class="btn ghost" onclick="copyResult('ad_result')">결과 복사</button></div>
+    <div class="result" id="ad_result">값을 입력하면 새 평단과 투입금액을 계산합니다.</div>
+  </section>
 
-    <section class="card">
-      <h2>2. 현재 상태</h2>
-      <div class="summary">
-        <div class="metric"><div class="k">매수 원금</div><div class="v" id="cost">-</div></div>
-        <div class="metric"><div class="k">현재 평가금</div><div class="v" id="value">-</div></div>
-        <div class="metric"><div class="k">평가 손익</div><div class="v" id="pnl">-</div><div class="s" id="pnlsub"></div></div>
-        <div class="metric"><div class="k">본전까지</div><div class="v" id="breakeven">-</div><div class="s" id="breakevensub"></div></div>
-      </div>
+  <section class="tool" id="recovery">
+    <div class="toolhead">
+      <div><h2>손실 복구 계산기</h2><p>현재 손실률에서 본전까지 몇 % 올라야 하는지 계산합니다.</p></div>
+      <span class="pill">-50%는 +100%</span>
+    </div>
+    <div class="fields">
+      <div class="field"><label>현재 손실률 (%)</label><input id="rc_loss" inputmode="decimal" placeholder="예: 30"></div>
+      <div class="field"><label>현재 주가 (선택)</label><input id="rc_price" inputmode="decimal" placeholder="예: 7000"></div>
+    </div>
+    <div class="actions"><button class="btn" onclick="calcRecovery()">계산하기</button><button class="btn ghost" onclick="copyResult('rc_result')">결과 복사</button></div>
+    <div class="result" id="rc_result">손실률을 입력하면 본전까지 필요한 상승률을 계산합니다.</div>
+  </section>
+
+  <section class="tool" id="targetavg">
+    <div class="toolhead">
+      <div><h2>목표 평단가 계산기</h2><p>원하는 평단까지 낮추려면 몇 주를 더 사고 얼마가 필요한지 역산합니다.</p></div>
+      <span class="pill">필요 추가매수 역산</span>
+    </div>
+    <div class="fields">
+      <div class="field"><label>현재 평균 매수가</label><input id="ta_avg" inputmode="decimal" placeholder="예: 10000"></div>
+      <div class="field"><label>현재 보유 수량</label><input id="ta_qty" inputmode="decimal" placeholder="예: 100"></div>
+      <div class="field"><label>추가매수 가격</label><input id="ta_price" inputmode="decimal" placeholder="예: 7000"></div>
+      <div class="field"><label>원하는 목표 평단</label><input id="ta_target" inputmode="decimal" placeholder="예: 8500"></div>
+    </div>
+    <div class="actions"><button class="btn" onclick="calcTargetAvg()">계산하기</button><button class="btn ghost" onclick="copyResult('ta_result')">결과 복사</button></div>
+    <div class="result" id="ta_result">목표 평단에 필요한 추가 수량과 금액을 계산합니다.</div>
+  </section>
+
+  <section class="tool" id="targetprofit">
+    <div class="toolhead">
+      <div><h2>목표 수익 계산기</h2><p>평단 기준 원하는 수익률에 도달하려면 주가가 얼마여야 하는지 계산합니다.</p></div>
+      <span class="pill">매도가 참고용</span>
+    </div>
+    <div class="fields">
+      <div class="field"><label>평균 매수가</label><input id="tp_avg" inputmode="decimal" placeholder="예: 10000"></div>
+      <div class="field"><label>보유 수량</label><input id="tp_qty" inputmode="decimal" placeholder="예: 100"></div>
+      <div class="field"><label>목표 수익률 (%)</label><input id="tp_rate" inputmode="decimal" placeholder="예: 10"></div>
+      <div class="field"><label>현재가 (선택)</label><input id="tp_current" inputmode="decimal" placeholder="예: 9200"></div>
+    </div>
+    <div class="actions"><button class="btn" onclick="calcTargetProfit()">계산하기</button><button class="btn ghost" onclick="copyResult('tp_result')">결과 복사</button></div>
+    <div class="result" id="tp_result">목표 수익률을 입력하면 목표 주가와 예상 수익금을 계산합니다.</div>
+  </section>
+
+  <section class="tool" id="compound">
+    <div class="toolhead">
+      <div><h2>주식 복리 계산기</h2><p>원금과 회당 수익률, 반복 횟수로 복리 성장 금액을 계산합니다.</p></div>
+      <span class="pill">가정값 계산</span>
+    </div>
+    <div class="fields">
+      <div class="field"><label>시작 원금</label><input id="cp_principal" inputmode="decimal" placeholder="예: 3000000"></div>
+      <div class="field"><label>회당 수익률 (%)</label><input id="cp_rate" inputmode="decimal" placeholder="예: 10"></div>
+      <div class="field"><label>반복 횟수</label><input id="cp_rounds" inputmode="numeric" placeholder="예: 20"></div>
+      <div class="field"><label>목표 금액 (선택)</label><input id="cp_target" inputmode="decimal" placeholder="예: 100000000"></div>
+    </div>
+    <div class="actions"><button class="btn" onclick="calcCompound()">계산하기</button><button class="btn ghost" onclick="copyResult('cp_result')">결과 복사</button></div>
+    <div class="result" id="cp_result">복리 결과와 목표 금액까지 필요한 횟수를 계산합니다.</div>
+  </section>
+
+  <div class="content">
+    <section class="info">
+      <h3>손실률과 복구 상승률은 다릅니다</h3>
+      <p>주가가 50% 하락하면 남은 금액은 원금의 절반입니다. 그래서 본전으로 돌아가려면 남은 금액이 2배가 되어야 하므로 +100% 상승이 필요합니다.</p>
+      <table class="table">
+        <thead><tr><th>손실률</th><th>본전 필요 상승률</th></tr></thead>
+        <tbody>
+          <tr><td>-10%</td><td>+11.11%</td></tr>
+          <tr><td>-20%</td><td>+25.00%</td></tr>
+          <tr><td>-30%</td><td>+42.86%</td></tr>
+          <tr><td>-50%</td><td>+100.00%</td></tr>
+          <tr><td>-70%</td><td>+233.33%</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section class="info">
+      <h3>계산기를 사용할 때 체크할 점</h3>
+      <ul>
+        <li>수수료, 세금, 환율은 기본 계산에 포함하지 않습니다.</li>
+        <li>목표 평단 계산은 추가매수 가격과 목표 평단 관계에 따라 불가능할 수 있습니다.</li>
+        <li>복리 계산은 같은 수익률이 반복된다는 가정일 뿐 실제 투자수익을 보장하지 않습니다.</li>
+        <li>계산 결과는 투자 판단이 아니라 숫자 확인용으로 활용하세요.</li>
+      </ul>
     </section>
   </div>
 
-  <section class="card section">
-    <h2>3. 여기서 더 오르면 내 계좌는?</h2>
-    <div class="scenarios" id="scenarios"></div>
-  </section>
-
-  <section class="card section">
-    <h2>4. 목표금액 계산기</h2>
-    <div class="goalbox">
-      <div class="field"><label>목표 평가금액</label><input id="goal" inputmode="decimal" placeholder="예: 1000000" /></div>
-      <div class="field"><label>목표 수익금 (선택)</label><input id="goalProfit" inputmode="decimal" placeholder="예: 100000" /></div>
-    </div>
-    <div class="actions"><button class="secondary" id="goalCalc">목표가 계산</button></div>
-    <div class="resultline" id="goalResult">목표금액이나 목표수익금을 입력하면 필요한 주가와 상승률을 계산합니다.</div>
-  </section>
-
-  <section class="card section">
-    <h2>5. 저장한 종목</h2>
-    <div class="saved-list" id="savedList"><div class="notice">아직 저장한 종목이 없습니다.</div></div>
-  </section>
-
-  <div class="footer">투자 참고용 계산 도구이며 특정 종목의 매수·매도를 권유하지 않습니다.<br>제휴·광고·협업 문의: rolex0331@naver.com</div>
+  <div class="footer">
+    플러스라이프 주식 계산기 · 투자 참고용 무료 도구<br>
+    특정 종목의 매수·매도를 권유하지 않습니다. 실제 거래 전 증권사 수수료·세금 등을 별도로 확인하세요.
+  </div>
 </div>
+
 <script>
-const $=id=>document.getElementById(id);
-const num=v=>Number(String(v||'').replace(/,/g,''));
-const won=n=>Number.isFinite(n)?Math.round(n).toLocaleString('ko-KR')+'원':'-';
-const pct=n=>Number.isFinite(n)?(n>=0?'+':'')+n.toFixed(2)+'%':'-';
-const inputs=['avg','qty','current'];
-function valid(){const a=num($('avg').value),q=num($('qty').value),c=num($('current').value);return a>0&&q>0&&c>0?{a,q,c}:null}
-function calc(){const x=valid();if(!x){alert('평단, 수량, 현재가를 모두 입력해 주세요.');return}const {a,q,c}=x;const cost=a*q,val=c*q,pnl=val-cost,rate=(c/a-1)*100,need=(a/c-1)*100;
-$('cost').textContent=won(cost);$('value').textContent=won(val);$('pnl').textContent=(pnl>=0?'+':'')+won(pnl);$('pnl').className='v '+(pnl>=0?'pos':'neg');$('pnlsub').textContent='수익률 '+pct(rate);
-if(c<a){$('breakeven').textContent='+'+need.toFixed(2)+'%';$('breakeven').className='v neg';$('breakevensub').textContent='주가 '+won(a)+' 도달 시 본전';}else{$('breakeven').textContent='본전 이상';$('breakeven').className='v pos';$('breakevensub').textContent='현재 평단보다 '+pct(rate)+' 위';}
-renderScenarios();}
-function renderScenarios(){const x=valid();const box=$('scenarios');box.innerHTML='';[3,5,10,20,30].forEach(p=>{const d=document.createElement('div');d.className='scenario';if(!x){d.innerHTML=`<div class="pct">+${p}%</div><div class="price">-</div><div class="profit">-</div>`;}else{const np=x.c*(1+p/100),nv=np*x.q,profit=nv-x.a*x.q;d.innerHTML=`<div class="pct">현재가 대비 +${p}%</div><div class="price">${won(np)}</div><div class="profit">손익 ${(profit>=0?'+':'')+won(profit)}</div>`;}box.appendChild(d);});}
-function goalCalc(){const x=valid();if(!x){alert('먼저 평단, 수량, 현재가를 입력해 주세요.');return}const g=num($('goal').value),gp=num($('goalProfit').value);let target=0,label='';if(g>0){target=g;label='목표 평가금액';}else if(gp>0){target=x.a*x.q+gp;label='목표 수익금';}else{$('goalResult').textContent='목표금액이나 목표수익금을 입력해 주세요.';return}const tp=target/x.q,fromNow=(tp/x.c-1)*100,fromAvg=(tp/x.a-1)*100;$('goalResult').innerHTML=`${label} 기준 필요한 주가는 <b>${won(tp)}</b>입니다.<br>현재가 대비 <b class="${fromNow>=0?'pos':'neg'}">${pct(fromNow)}</b>, 평단 대비 <b>${pct(fromAvg)}</b> 수준입니다.`}
-function save(){const x=valid();if(!x){alert('저장하려면 평단, 수량, 현재가를 입력해 주세요.');return}const name=$('name').value.trim()||'이름 없는 종목';let list=JSON.parse(localStorage.getItem('myStocks')||'[]');const item={id:Date.now(),name,avg:x.a,qty:x.q,current:x.c};list.unshift(item);list=list.slice(0,10);localStorage.setItem('myStocks',JSON.stringify(list));renderSaved();}
-function renderSaved(){const list=JSON.parse(localStorage.getItem('myStocks')||'[]');const box=$('savedList');if(!list.length){box.innerHTML='<div class="notice">아직 저장한 종목이 없습니다.</div>';return}box.innerHTML='';list.forEach(it=>{const d=document.createElement('div');d.className='saved-item';const rate=(it.current/it.avg-1)*100;d.innerHTML=`<div><strong>${it.name}</strong><small>평단 ${won(it.avg)} · ${it.qty.toLocaleString('ko-KR')}주 · 저장 당시 ${pct(rate)}</small></div><div class="buttons"><button class="secondary" data-load="${it.id}">불러오기</button><button class="ghost" data-del="${it.id}">삭제</button></div>`;box.appendChild(d)});box.querySelectorAll('[data-load]').forEach(b=>b.onclick=()=>{const id=Number(b.dataset.load),it=list.find(v=>v.id===id);$('name').value=it.name;$('avg').value=it.avg;$('qty').value=it.qty;$('current').value=it.current;calc();window.scrollTo({top:0,behavior:'smooth'});});box.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{const id=Number(b.dataset.del);localStorage.setItem('myStocks',JSON.stringify(list.filter(v=>v.id!==id)));renderSaved();});}
-$('calc').onclick=calc;$('save').onclick=save;$('goalCalc').onclick=goalCalc;$('reset').onclick=()=>{$('name').value='';['avg','qty','current','goal','goalProfit'].forEach(id=>$(id).value='');['cost','value','pnl','breakeven'].forEach(id=>$(id).textContent='-');$('pnlsub').textContent='';$('breakevensub').textContent='';$('goalResult').textContent='목표금액이나 목표수익금을 입력하면 필요한 주가와 상승률을 계산합니다.';renderScenarios();};inputs.forEach(id=>$(id).addEventListener('input',()=>{if(valid())calc()}));renderScenarios();renderSaved();
+const n = id => Number(String(document.getElementById(id).value || '').replace(/,/g,''));
+const w = v => Number.isFinite(v) ? Math.round(v).toLocaleString('ko-KR') + '원' : '-';
+const p = v => Number.isFinite(v) ? (v >= 0 ? '+' : '') + v.toFixed(2) + '%' : '-';
+const el = id => document.getElementById(id);
+const metric = (k,v,s='',cls='') => `<div class="metric"><div class="k">${k}</div><div class="v ${cls}">${v}</div>${s?`<div class="s">${s}</div>`:''}</div>`;
+const grid = items => `<div class="result-grid">${items.join('')}</div>`;
+const positive = (...vals) => vals.every(v => Number.isFinite(v) && v > 0);
+
+document.querySelectorAll('#tabs button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('#tabs button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tool').forEach(t=>t.classList.remove('active'));
+    btn.classList.add('active');
+    el(btn.dataset.target).classList.add('active');
+    history.replaceState(null,'','#'+btn.dataset.target);
+  });
+});
+const hash = location.hash.replace('#','');
+if(hash && el(hash) && el(hash).classList.contains('tool')){
+  const b=document.querySelector(`[data-target="${hash}"]`); if(b) b.click();
+}
+
+let avgMode='qty';
+document.querySelectorAll('.mode button').forEach(btn=>{
+  btn.onclick=()=>{
+    document.querySelectorAll('.mode button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');avgMode=btn.dataset.mode;
+    el('qtyField').style.display=avgMode==='qty'?'flex':'none';
+    el('amountField').style.display=avgMode==='amount'?'flex':'none';
+  };
+});
+
+function calcAvgDown(){
+  const avg=n('ad_avg'), qty=n('ad_qty'), price=n('ad_price');
+  if(!positive(avg,qty,price)){el('ad_result').textContent='현재 평단, 보유 수량, 추가매수 가격을 정확히 입력해 주세요.';return}
+  let addQty, spend, remainder=0;
+  if(avgMode==='qty'){
+    addQty=n('ad_addqty');
+    if(!positive(addQty)){el('ad_result').textContent='추가매수 수량을 입력해 주세요.';return}
+    spend=price*addQty;
+  }else{
+    const amount=n('ad_amount');
+    if(!positive(amount)){el('ad_result').textContent='추가매수 금액을 입력해 주세요.';return}
+    addQty=Math.floor(amount/price);
+    spend=addQty*price; remainder=amount-spend;
+    if(addQty<1){el('ad_result').textContent='입력한 금액으로 1주 이상 매수할 수 없습니다.';return}
+  }
+  const oldCost=avg*qty, totalQty=qty+addQty, totalCost=oldCost+spend, newAvg=totalCost/totalQty;
+  const drop=(newAvg/avg-1)*100;
+  const items=[
+    metric('새 평균단가',w(newAvg),`기존 평단 대비 ${p(drop)}`,drop<=0?'pos':'warn'),
+    metric('추가매수',`${addQty.toLocaleString('ko-KR')}주`,w(spend)),
+    metric('총 보유',`${totalQty.toLocaleString('ko-KR')}주`,`총 투입 ${w(totalCost)}`)
+  ];
+  el('ad_result').innerHTML=grid(items)+(avgMode==='amount'&&remainder>0?`<div class="note">입력 금액 중 정수 주식 매수 후 남는 금액: ${w(remainder)}</div>`:'');
+}
+function calcRecovery(){
+  const loss=n('rc_loss'), current=n('rc_price');
+  if(!Number.isFinite(loss)||loss<=0||loss>=100){el('rc_result').textContent='0%보다 크고 100%보다 작은 손실률을 입력해 주세요.';return}
+  const recovery=(1/(1-loss/100)-1)*100;
+  const items=[metric('본전 필요 상승률',p(recovery),'현재 손실률 기준','neg')];
+  if(current>0){
+    const impliedAvg=current/(1-loss/100);
+    items.push(metric('추정 평단',w(impliedAvg),`현재가 ${w(current)} 기준`));
+    items.push(metric('본전 주가',w(impliedAvg),`현재가에서 ${p(recovery)}`));
+  }else{
+    items.push(metric('현재 손실',`-${loss.toFixed(2)}%`,'주가를 입력하면 본전 가격도 계산'));
+  }
+  el('rc_result').innerHTML=grid(items);
+}
+function calcTargetAvg(){
+  const avg=n('ta_avg'),qty=n('ta_qty'),price=n('ta_price'),target=n('ta_target');
+  if(!positive(avg,qty,price,target)){el('ta_result').textContent='모든 값을 정확히 입력해 주세요.';return}
+  const exact=qty*(avg-target)/(target-price);
+  if(!Number.isFinite(exact)||exact<=0){
+    el('ta_result').innerHTML=`<span class="warn">현재 조건에서는 추가매수만으로 입력한 목표 평단에 도달할 수 없습니다.</span><div class="note">일반적으로 물타기로 평단을 낮추려면 추가매수 가격이 목표 평단보다 낮아야 합니다.</div>`;return;
+  }
+  const addQty=Math.ceil(exact), spend=addQty*price, newAvg=(avg*qty+spend)/(qty+addQty);
+  el('ta_result').innerHTML=grid([
+    metric('필요 추가수량',`${addQty.toLocaleString('ko-KR')}주`,`이론값 ${exact.toFixed(2)}주`,'pos'),
+    metric('필요 추가금액',w(spend),`추가매수 가격 ${w(price)}`),
+    metric('실제 새 평단',w(newAvg),`정수 주식 기준`)
+  ]);
+}
+function calcTargetProfit(){
+  const avg=n('tp_avg'),qty=n('tp_qty'),rate=n('tp_rate'),current=n('tp_current');
+  if(!positive(avg,qty)||!Number.isFinite(rate)){el('tp_result').textContent='평단, 수량, 목표 수익률을 정확히 입력해 주세요.';return}
+  const targetPrice=avg*(1+rate/100), profit=(targetPrice-avg)*qty, targetValue=targetPrice*qty;
+  const items=[
+    metric('목표 주가',w(targetPrice),`평단 대비 ${p(rate)}`,'pos'),
+    metric('예상 수익금',w(profit),`수수료·세금 제외`),
+    metric('목표 평가금',w(targetValue),`${qty.toLocaleString('ko-KR')}주 기준`)
+  ];
+  if(current>0){items[0]=metric('목표 주가',w(targetPrice),`현재가 ${w(current)}에서 ${p((targetPrice/current-1)*100)} 필요`,'pos')}
+  el('tp_result').innerHTML=grid(items);
+}
+function calcCompound(){
+  const principal=n('cp_principal'),rate=n('cp_rate'),rounds=n('cp_rounds'),target=n('cp_target');
+  if(!positive(principal)||!Number.isFinite(rate)||rate<=-100||!Number.isFinite(rounds)||rounds<0){
+    el('cp_result').textContent='원금, 회당 수익률, 반복 횟수를 정확히 입력해 주세요.';return;
+  }
+  const final=principal*Math.pow(1+rate/100,rounds), gain=final-principal;
+  const items=[
+    metric(`${Math.floor(rounds)}회 후`,w(final),`시작 ${w(principal)}`,'pos'),
+    metric('누적 증가액',w(gain),`가정 수익률 ${p(rate)}`),
+    metric('원금 대비',`${(final/principal).toFixed(2)}배`,`복리 가정`)
+  ];
+  let extra='';
+  if(target>principal && rate>0){
+    const need=Math.ceil(Math.log(target/principal)/Math.log(1+rate/100));
+    extra=`<div class="note">목표 ${w(target)}까지 같은 수익률이 반복된다고 가정하면 약 <b class="pos">${need}회</b>가 필요합니다.</div>`;
+  }else if(target>0 && target<=principal){
+    extra=`<div class="note">목표 금액이 현재 원금 이하입니다.</div>`;
+  }
+  el('cp_result').innerHTML=grid(items)+extra;
+}
+async function copyResult(id){
+  const text=el(id).innerText.trim();
+  if(!text||text.includes('입력하면'))return;
+  try{await navigator.clipboard.writeText(text);alert('계산 결과를 복사했습니다.')}catch(e){alert('복사하지 못했습니다.')}
+}
+['ad_avg','ad_qty','ad_price','ad_addqty','ad_amount'].forEach(id=>el(id).addEventListener('input',()=>{const req=avgMode==='qty'?n('ad_addqty'):n('ad_amount');if(positive(n('ad_avg'),n('ad_qty'),n('ad_price'),req))calcAvgDown()}));
+el('rc_loss').addEventListener('input',()=>{if(n('rc_loss')>0)calcRecovery()});
+['ta_avg','ta_qty','ta_price','ta_target'].forEach(id=>el(id).addEventListener('input',()=>{if(positive(n('ta_avg'),n('ta_qty'),n('ta_price'),n('ta_target')))calcTargetAvg()}));
+['tp_avg','tp_qty','tp_rate','tp_current'].forEach(id=>el(id).addEventListener('input',()=>{if(positive(n('tp_avg'),n('tp_qty'))&&Number.isFinite(n('tp_rate')))calcTargetProfit()}));
+['cp_principal','cp_rate','cp_rounds','cp_target'].forEach(id=>el(id).addEventListener('input',()=>{if(positive(n('cp_principal'))&&Number.isFinite(n('cp_rate'))&&Number.isFinite(n('cp_rounds')))calcCompound()}));
 </script>
-</body></html>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
