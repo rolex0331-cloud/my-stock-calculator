@@ -1,0 +1,9 @@
+{
+  "name":"오혜야 - 오늘의 진짜 특가",
+  "short_name":"오혜야",
+  "start_url":"./",
+  "display":"standalone",
+  "background_color":"#fff8f4",
+  "theme_color":"#ff5b35",
+  "description":"가격 메리트를 점수화해 보여주는 특가 발견 서비스"
+}
