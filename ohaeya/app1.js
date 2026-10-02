@@ -1,4 +1,4 @@
-const KEYS={products:'ohaeya.products.v1',favorites:'ohaeya.favorites.v1',candidates:'ohaeya.candidates.v1',clicks:'ohaeya.clicks.v1'};
+const KEYS={products:'ohaeya.products.v2',favorites:'ohaeya.favorites.v2',candidates:'ohaeya.candidates.v2',clicks:'ohaeya.clicks.v2'};
 const categories=['전체','식품','생활','가전·디지털','패션','뷰티','육아','기타'];
 const nowISO=()=>new Date().toISOString();
 const daysAgo=n=>new Date(Date.now()-n*86400000).toISOString();
