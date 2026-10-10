@@ -1,0 +1,83 @@
+# Operational cron only. Does not change the stock calculator app.
+# Public Bitget CLOSED candles -> existing TAEPYEONG R4 Shadow simulator.
+# No exchange credentials, no orders, no repo write permissions.
+name: TAEPYEONG R4 Shadow 5m Feed
+
+on:
+  schedule:
+    # Avoid the top of every hour; GitHub may delay or drop scheduled jobs.
+    - cron: '3-58/5 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: r4-shadow-public-candles
+  cancel-in-progress: false
+
+jobs:
+  observe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Collect public completed 5m candles and verify virtual ledger status
+        env:
+          R4_BASE: https://taepyeong-r4-shadow.floot.app
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import sys
+          import urllib.request
+          import urllib.error
+
+          base = os.environ["R4_BASE"]
+
+          def get(path):
+              req = urllib.request.Request(
+                  base + path, headers={"Accept": "application/json", "Cache-Control": "no-store", "User-Agent": "R4-Public-Feed/1.0"}
+              )
+              with urllib.request.urlopen(req, timeout=80) as resp:
+                  body = json.loads(resp.read(1_000_000))
+              if not isinstance(body, dict):
+                  raise RuntimeError("BAD_JSON_OBJECT")
+              return body.get("json", body)
+
+          try:
+              result = get("/_api/shadow-cycle?source=watch")
+              if result.get("ok") is not True:
+                  raise RuntimeError("COLLECTION_REPORTED_FAILURE")
+              if result.get("skipped"):
+                  print("SKIPPED:", result.get("reason", "rate guard"), "- no new candle collection claimed")
+              else:
+                  run = result.get("run") or {}
+                  if run.get("symbolsOk") != 3:
+                      raise RuntimeError("INCOMPLETE_THREE_SYMBOL_CYCLE")
+                  checks = run.get("dataFreshness") or {}
+                  required = ["BTCUSDT", "ETHUSDT", "SOLUSDT"]
+                  if set(checks) != set(required):
+                      raise RuntimeError("MISSING_SYMBOL_FRESHNESS")
+                  print("STORED:", {s: checks[s].get("appendedBars") for s in required},
+                        "run:", run.get("runId"))
+              state = get("/_api/shadow-status")
+              health = state.get("monitorHealth") or {}
+              audit = state.get("tradeLifecycle") or {}
+              print("MARKETS:", [a.get("symbol") for a in (state.get("accounts") or [])],
+                    "health:", health.get("status"),
+                    "paper entries:", audit.get("entryCount"),
+                    "paper exits:", audit.get("exitCount"))
+              if len(state.get("accounts") or []) != 3:
+                  raise RuntimeError("ACCOUNT_COUNT_INVALID")
+              if health.get("lastRunStatus") in ("failed", "blocked"):
+                  raise RuntimeError("LATEST_CYCLE_FAILED")
+              if audit.get("stage") == "AUDIT_ALERT" or audit.get("issues"):
+                  raise RuntimeError("PAPER_LEDGER_AUDIT_ALERT")
+              if health.get("collectionState") in ("STOPPED", "FAILED", "NOT_STARTED"):
+                  raise RuntimeError("COLLECTION_NO_LONGER_RUNNING")
+              if not result.get("skipped") and health.get("status") != "FRESH":
+                  raise RuntimeError("NEW_COLLECTION_NOT_FRESH")
+          except (urllib.error.URLError, ValueError, RuntimeError) as error:
+              print("R4 SHADOW FEED FAILED:", str(error)[:250], file=sys.stderr)
+              sys.exit(1)
+          PY
