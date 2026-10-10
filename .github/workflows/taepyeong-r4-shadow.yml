@@ -24,11 +24,14 @@ jobs:
       - name: Collect public completed 5m candles and verify virtual ledger status
         env:
           R4_BASE: https://taepyeong-r4-shadow.floot.app
+          R4_RUN_KIND: ${{ github.event_name }}
         run: |
           python3 - <<'PY'
           import json
           import os
           import sys
+          import time
+          from datetime import datetime, timezone
           import urllib.request
           import urllib.error
 
@@ -45,7 +48,12 @@ jobs:
               return body.get("json", body)
 
           try:
-              result = get("/_api/shadow-cycle?source=watch")
+              event_kind = os.environ.get("R4_RUN_KIND", "unknown")
+              if event_kind not in ("schedule", "workflow_dispatch"):
+                  raise RuntimeError("UNEXPECTED_WORKFLOW_TRIGGER")
+              source_hint = "watch" if event_kind == "schedule" else "github-manual"
+              print("TRIGGER:", event_kind, "- only schedules may count as scheduled runs")
+              result = get("/_api/shadow-cycle?source=" + source_hint)
               if result.get("ok") is not True:
                   raise RuntimeError("COLLECTION_REPORTED_FAILURE")
               if result.get("skipped"):
@@ -73,7 +81,22 @@ jobs:
                   raise RuntimeError("LATEST_CYCLE_FAILED")
               if audit.get("stage") == "AUDIT_ALERT" or audit.get("issues"):
                   raise RuntimeError("PAPER_LEDGER_AUDIT_ALERT")
-              if health.get("collectionState") in ("STOPPED", "FAILED", "NOT_STARTED"):
+              if (audit.get("entryCount") or 0) > 0:
+                  p = state.get("observationProvenance") or {}
+                  recent = p.get("recent") or []
+                  now_ms = time.time() * 1000
+                  just_recorded = any(0 <= now_ms - float(e.get("recordedAt") or 0) < 12 * 60_000 for e in recent)
+                  hourly_audit = datetime.now(timezone.utc).minute < 9
+                  if just_recorded or hourly_audit:
+                      check = get("/_api/shadow-reconcile")
+                      if check.get("passed") is not True or check.get("symbolsChecked") != 3:
+                          raise RuntimeError("FROZEN_R4_RECONCILIATION_MISMATCH")
+                      print("INDEPENDENT LEDGER: all 3 symbols matched")
+                      if (p.get("lateOver1h") or 0) > 0:
+                          print("RETROSPECTIVE: some paper events were first seen >1h late; not real fills")
+              if (p if (audit.get("entryCount") or 0) > 0 else {}).get("invalidTimestamps", 0):
+                  raise RuntimeError("INVALID_PAPER_EVENT_RECORD_TIMESTAMP")
+              if health.get("collectionState") in ("STOPPED", "FAILED", "NOT_STARTED", "STUCK"):
                   raise RuntimeError("COLLECTION_NO_LONGER_RUNNING")
               if not result.get("skipped") and health.get("status") != "FRESH":
                   raise RuntimeError("NEW_COLLECTION_NOT_FRESH")
