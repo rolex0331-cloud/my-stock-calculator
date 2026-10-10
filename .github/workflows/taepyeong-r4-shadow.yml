@@ -75,6 +75,27 @@ jobs:
                     "health:", health.get("status"),
                     "paper entries:", audit.get("entryCount"),
                     "paper exits:", audit.get("exitCount"))
+              # Independent research preview of the LAST actually closed 5m bar.
+              # Its provisional marker is never saved and it never places orders.
+              # Read-only best effort: deployment may lag this workflow change.
+              try:
+                  ahead = get("/_api/shadow-ahead")
+                  if ahead.get("mode") != "RESEARCH_PREVIEW_ONLY" or ahead.get("noOrdersSent") is not True:
+                      raise RuntimeError("UNTRUSTED_PREVIEW_RESPONSE")
+                  if ahead.get("strategyHash") != state.get("strategyHash"):
+                      raise RuntimeError("AHEAD_FROZEN_HASH_MISMATCH")
+                  observed = ahead.get("observations") or []
+                  for row in observed:
+                      sig = row.get("signal")
+                      if sig is not None:
+                          print("R4 CLOSED-BAR RESEARCH CANDIDATE:",
+                                row.get("symbol"), sig.get("id"),
+                                "state:", row.get("state"),
+                                "model-open lag ms:", row.get("observedAfterModeledOpenMs"),
+                                "NO actual next-open or demo fill")
+              except (urllib.error.URLError, ValueError, RuntimeError) as preview_error:
+                  print("R4 research-preview unavailable; core 5m collection still assessed separately:",
+                        str(preview_error)[:120])
               if len(state.get("accounts") or []) != 3:
                   raise RuntimeError("ACCOUNT_COUNT_INVALID")
               if health.get("lastRunStatus") in ("failed", "blocked"):
